@@ -11,7 +11,7 @@ python scaffold.py
 ## Steps
 
 - [x] **1.** linear_beta_schedule
-- [ ] **2.** alphas_from_betas
+- [x] **2.** alphas_from_betas
 - [ ] **3.** cumprod_alphas
 - [ ] **4.** extract_into_batch
 - [ ] **5.** q_sample
