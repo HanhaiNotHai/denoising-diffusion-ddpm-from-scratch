@@ -15,7 +15,7 @@ python scaffold.py
 - [x] **3.** cumprod_alphas
 - [x] **4.** extract_into_batch
 - [x] **5.** q_sample
-- [ ] **6.** build_diffusion_schedule
+- [x] **6.** build_diffusion_schedule
 - [ ] **7.** noise_prediction_loss
 - [ ] **8.** diffusion_training_loss
 - [ ] **9.** timestep_embedding

@@ -46,8 +46,26 @@ def q_sample(x0: Tensor, t: Tensor, noise: Tensor, alphas_cumprod: Tensor):
         + extract_into_batch(sqrt_one_minus_alphas_cumprod, t, x0) * noise
     )
 
-# Step 6 - build_diffusion_schedule (not yet solved)
-# TODO: implement
+# Step 6 - build_diffusion_schedule
+def build_diffusion_schedule(
+    T: int = 100, beta_start: float = 1e-4, beta_end: float = 0.02
+) -> dict:
+    '''build betas, alphas, alphas_cumprod and useful sqrts'''
+
+    betas = linear_beta_schedule(T, beta_start, beta_end)
+    alphas = alphas_from_betas(betas)
+    alphas_cumprod = cumprod_alphas(alphas)
+    sqrt_alphas_cumprod = torch.sqrt(alphas_cumprod)
+    sqrt_one_minus_alphas_cumprod = torch.sqrt(1.0 - alphas_cumprod)
+
+    return {
+        'betas': betas,
+        'alphas': alphas,
+        'alphas_cumprod': alphas_cumprod,
+        'sqrt_alphas_cumprod': sqrt_alphas_cumprod,
+        'sqrt_one_minus_alphas_cumprod': sqrt_one_minus_alphas_cumprod,
+        'T': T,
+    }
 
 # Step 7 - noise_prediction_loss (not yet solved)
 # TODO: implement
