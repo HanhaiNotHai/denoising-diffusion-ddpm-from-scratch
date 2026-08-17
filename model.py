@@ -35,8 +35,16 @@ def extract_into_batch(a: Tensor, t: Tensor, x: Tensor):
 
     return a.gather(0, t.long()).reshape(-1, 1, 1, 1)
 
-# Step 5 - q_sample (not yet solved)
-# TODO: implement
+# Step 5 - q_sample
+def q_sample(x0: Tensor, t: Tensor, noise: Tensor, alphas_cumprod: Tensor):
+    '''x_t = sqrt(bar_alpha_t) * x0 + sqrt(1 - bar_alpha_t) * noise'''
+
+    sqrt_alphas_cumprod = torch.sqrt(alphas_cumprod)
+    sqrt_one_minus_alphas_cumprod = torch.sqrt(1.0 - alphas_cumprod)
+    return (
+        extract_into_batch(sqrt_alphas_cumprod, t, x0) * x0
+        + extract_into_batch(sqrt_one_minus_alphas_cumprod, t, x0) * noise
+    )
 
 # Step 6 - build_diffusion_schedule (not yet solved)
 # TODO: implement
