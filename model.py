@@ -18,12 +18,10 @@ def linear_beta_schedule(T: int, beta_start: float = 1e-4, beta_end: float = 0.0
     return torch.linspace(beta_start, beta_end, T, dtype=torch.float32)
 
 # Step 2 - alphas_from_betas
-import torch
-import torch.nn.functional as F
+def alphas_from_betas(betas: Tensor):
+    '''return 1 - betas'''
 
-def alphas_from_betas(betas):
-    # TODO: return 1 - betas
-    pass
+    return 1.0 - betas
 
 # Step 3 - cumprod_alphas (not yet solved)
 # TODO: implement
