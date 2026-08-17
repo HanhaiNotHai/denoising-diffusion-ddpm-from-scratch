@@ -13,7 +13,7 @@ python scaffold.py
 - [x] **1.** linear_beta_schedule
 - [x] **2.** alphas_from_betas
 - [x] **3.** cumprod_alphas
-- [ ] **4.** extract_into_batch
+- [x] **4.** extract_into_batch
 - [ ] **5.** q_sample
 - [ ] **6.** build_diffusion_schedule
 - [ ] **7.** noise_prediction_loss
