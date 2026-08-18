@@ -303,8 +303,17 @@ def ddpm_sample_loop(
 
     return x
 
-# Step 19 - sample_quality_mse (not yet solved)
-# TODO: implement
+# Step 19 - sample_quality_mse
+def sample_quality_mse(samples: Tensor, dataset: Tensor) -> float:
+    '''mean over samples of min MSE to any dataset image'''
+
+    return (
+        ((samples[:, None] - dataset[None]) ** 2)
+        .mean(dim=(2, 3, 4))
+        .min(dim=1)
+        .values.mean()
+        .item()
+    )
 
 # Step 20 - ddpm_experiment (not yet solved)
 # TODO: implement
