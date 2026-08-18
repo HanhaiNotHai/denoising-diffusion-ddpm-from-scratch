@@ -273,7 +273,7 @@ def ddpm_p_sample(
     '''one reverse step x_t -> x_{t-1}'''
 
     if noise is None:
-        noise = torch.randint_like(x_t)
+        noise = torch.randn_like(x_t)
     noise[t == 0] = 0
 
     eps = tiny_unet_forward(x_t, t, params)
@@ -283,12 +283,25 @@ def ddpm_p_sample(
     return x_prev
 
 # Step 18 - ddpm_sample_loop
-import torch
-import torch.nn.functional as F
+def ddpm_sample_loop(
+    params: dict[str, Tensor],
+    schedule: dict[str, Tensor | int],
+    shape: tuple[int, ...],
+    seed: int = 0,
+):
+    '''ancestral sampling from pure noise to x0'''
 
-def ddpm_sample_loop(params: dict, schedule: dict, shape: tuple, seed: int = 0):
-    # TODO: ancestral sampling from pure noise to x0
-    pass
+    B = shape[0]
+    T = schedule['T']
+
+    torch.manual_seed(seed)
+
+    x = torch.randn(shape)
+    for t in reversed(range(T)):
+        t_batch = torch.full((B,), t)
+        x = ddpm_p_sample(x, t_batch, params, schedule)
+
+    return x
 
 # Step 19 - sample_quality_mse (not yet solved)
 # TODO: implement
