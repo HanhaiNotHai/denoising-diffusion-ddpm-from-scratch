@@ -7,6 +7,9 @@ Assembled from your step-by-step solutions.
 import numpy as np
 
 # Step 1 - linear_beta_schedule
+from functools import partial
+from typing import Callable
+
 import torch
 import torch.nn.functional as F
 from torch import Tensor
@@ -47,9 +50,7 @@ def q_sample(x0: Tensor, t: Tensor, noise: Tensor, alphas_cumprod: Tensor):
     )
 
 # Step 6 - build_diffusion_schedule
-def build_diffusion_schedule(
-    T: int = 100, beta_start: float = 1e-4, beta_end: float = 0.02
-) -> dict:
+def build_diffusion_schedule(T: int = 100, beta_start: float = 1e-4, beta_end: float = 0.02):
     '''build betas, alphas, alphas_cumprod and useful sqrts'''
 
     betas = linear_beta_schedule(T, beta_start, beta_end)
@@ -67,20 +68,72 @@ def build_diffusion_schedule(
         'T': T,
     }
 
-# Step 7 - noise_prediction_loss (not yet solved)
-# TODO: implement
+# Step 7 - noise_prediction_loss
+def noise_prediction_loss(noise_pred: Tensor, noise: Tensor):
+    '''MSE between predicted and true noise'''
 
-# Step 8 - diffusion_training_loss (not yet solved)
-# TODO: implement
+    return ((noise_pred - noise) ** 2).mean()
 
-# Step 9 - timestep_embedding (not yet solved)
-# TODO: implement
+# Step 8 - diffusion_training_loss
+def diffusion_training_loss(
+    model: Callable[[Tensor, Tensor], Tensor],
+    x0: Tensor,
+    t: Tensor,
+    noise: Tensor,
+    alphas_cumprod: Tensor,
+):
+    '''q_sample -> model -> MSE(noise_pred, noise)'''
 
-# Step 10 - init_tiny_unet (not yet solved)
-# TODO: implement
+    x_t = q_sample(x0, t, noise, alphas_cumprod)
+    noise_pred = model(x_t, t)
+    return noise_prediction_loss(noise_pred, noise)
 
-# Step 11 - tiny_unet_forward (not yet solved)
-# TODO: implement
+# Step 9 - timestep_embedding
+def timestep_embedding(t: Tensor, dim: int):
+    '''sinusoidal timestep embedding of shape (B, dim)'''
+
+    half = dim // 2
+
+    if half == 1:
+        exponent = torch.zeros(1)
+    else:
+        exponent = torch.arange(half) / (half - 1)
+
+    freqs = 10000**exponent
+
+    args = t[:, None] / freqs[None]
+
+    emb = torch.cat([torch.sin(args), torch.cos(args)], dim=-1)
+
+    return emb
+
+# Step 10 - init_tiny_unet
+def init_tiny_unet(in_ch: int = 1, hidden: int = 16, time_dim: int = 16, seed: int = 0):
+    '''initialize tiny residual denoiser parameters'''
+
+    torch.manual_seed(seed)
+
+    normal = partial(torch.normal, mean=0, std=0.02, requires_grad=True)
+    zeros = partial(torch.zeros, requires_grad=True)
+
+    return {
+        'conv_in_w': normal(size=(hidden, in_ch, 3, 3)),
+        'conv_in_b': zeros(size=(hidden,)),
+        'time_mlp_w': normal(size=(time_dim, hidden)),
+        'time_mlp_b': zeros(size=(time_dim,)),
+        'conv_mid_w': normal(size=(hidden, time_dim, 3, 3)),
+        'conv_mid_b': zeros(size=(hidden,)),
+        'conv_out_w': normal(size=(in_ch, hidden, 3, 3)),
+        'conv_out_b': zeros(size=(in_ch,)),
+    }
+
+# Step 11 - tiny_unet_forward
+import torch
+import torch.nn.functional as F
+
+def tiny_unet_forward(x, t, params: dict):
+    # TODO: time-conditioned tiny CNN predicting noise
+    pass
 
 # Step 12 - make_blob_dataset (not yet solved)
 # TODO: implement
