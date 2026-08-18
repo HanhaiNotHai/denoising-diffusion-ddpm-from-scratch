@@ -26,7 +26,7 @@ python scaffold.py
 - [x] **14.** train_ddpm
 - [x] **15.** predict_x0_from_eps
 - [x] **16.** ddpm_p_mean_variance
-- [ ] **17.** ddpm_p_sample
+- [x] **17.** ddpm_p_sample
 - [ ] **18.** ddpm_sample_loop
 - [ ] **19.** sample_quality_mse
 - [ ] **20.** ddpm_experiment
