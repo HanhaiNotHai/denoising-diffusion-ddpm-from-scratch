@@ -128,12 +128,25 @@ def init_tiny_unet(in_ch: int = 1, hidden: int = 16, time_dim: int = 16, seed: i
     }
 
 # Step 11 - tiny_unet_forward
-import torch
-import torch.nn.functional as F
+def tiny_unet_forward(x: Tensor, t: Tensor, params: dict[str, Tensor]):
+    '''time-conditioned tiny CNN predicting noise'''
 
-def tiny_unet_forward(x, t, params: dict):
-    # TODO: time-conditioned tiny CNN predicting noise
-    pass
+    conv_in_w = params['conv_in_w']
+    conv_in_b = params['conv_in_b']
+    time_mlp_w = params['time_mlp_w']
+    time_mlp_b = params['time_mlp_b']
+    conv_mid_w = params['conv_mid_w']
+    conv_mid_b = params['conv_mid_b']
+    conv_out_w = params['conv_out_w']
+    conv_out_b = params['conv_out_b']
+
+    h = F.conv2d(x, conv_in_w, conv_in_b, padding=1)
+    temb = timestep_embedding(t, time_mlp_w.shape[1])
+    temb = F.relu(F.linear(temb, time_mlp_w, time_mlp_b))
+    h += temb[..., None, None]
+    h = F.relu(h)
+    h = F.relu(F.conv2d(h, conv_mid_w, conv_mid_b, padding=1))
+    return F.conv2d(h, conv_out_w, conv_out_b, padding=1)
 
 # Step 12 - make_blob_dataset (not yet solved)
 # TODO: implement
