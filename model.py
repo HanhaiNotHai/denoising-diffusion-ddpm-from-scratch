@@ -228,8 +228,13 @@ def train_ddpm(
 
     return params, history
 
-# Step 15 - predict_x0_from_eps (not yet solved)
-# TODO: implement
+# Step 15 - predict_x0_from_eps
+def predict_x0_from_eps(x_t: Tensor, t: Tensor, eps: Tensor, alphas_cumprod: Tensor):
+    '''invert the q_sample equation for x0'''
+
+    alphas_cumprod_t = extract_into_batch(alphas_cumprod, t, x_t)
+    x0_hat = (x_t - torch.sqrt(1 - alphas_cumprod_t) * eps) / torch.sqrt(alphas_cumprod_t)
+    return x0_hat
 
 # Step 16 - ddpm_p_mean_variance (not yet solved)
 # TODO: implement
