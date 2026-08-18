@@ -203,8 +203,30 @@ def ddpm_train_step(
 
     return new_params, float(loss)
 
-# Step 14 - train_ddpm (not yet solved)
-# TODO: implement
+# Step 14 - train_ddpm
+def train_ddpm(
+    dataset: Tensor,
+    params: dict[str, Tensor],
+    schedule: dict[str, Tensor | int],
+    num_steps: int = 50,
+    batch_size: int = 16,
+    lr: float = 1e-2,
+    seed: int = 0,
+):
+    '''minibatch SGD training loop'''
+
+    N = dataset.shape[0]
+
+    history: list[float] = []
+    for step in range(num_steps):
+        torch.manual_seed(seed + step)
+
+        idx = torch.randint(0, N, size=(batch_size,))
+        batch = dataset[idx]
+        params, loss = ddpm_train_step(params, batch, schedule, lr, seed)
+        history.append(loss)
+
+    return params, history
 
 # Step 15 - predict_x0_from_eps (not yet solved)
 # TODO: implement

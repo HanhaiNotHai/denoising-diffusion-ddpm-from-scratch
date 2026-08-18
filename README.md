@@ -23,7 +23,7 @@ python scaffold.py
 - [x] **11.** tiny_unet_forward
 - [x] **12.** make_blob_dataset
 - [x] **13.** ddpm_train_step
-- [ ] **14.** train_ddpm
+- [x] **14.** train_ddpm
 - [ ] **15.** predict_x0_from_eps
 - [ ] **16.** ddpm_p_mean_variance
 - [ ] **17.** ddpm_p_sample
