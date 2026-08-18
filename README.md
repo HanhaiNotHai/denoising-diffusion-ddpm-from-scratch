@@ -29,7 +29,7 @@ python scaffold.py
 - [x] **17.** ddpm_p_sample
 - [x] **18.** ddpm_sample_loop
 - [x] **19.** sample_quality_mse
-- [ ] **20.** ddpm_experiment
+- [x] **20.** ddpm_experiment
 
 ---
 
