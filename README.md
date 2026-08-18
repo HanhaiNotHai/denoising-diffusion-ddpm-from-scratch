@@ -21,7 +21,7 @@ python scaffold.py
 - [x] **9.** timestep_embedding
 - [x] **10.** init_tiny_unet
 - [x] **11.** tiny_unet_forward
-- [ ] **12.** make_blob_dataset
+- [x] **12.** make_blob_dataset
 - [ ] **13.** ddpm_train_step
 - [ ] **14.** train_ddpm
 - [ ] **15.** predict_x0_from_eps
