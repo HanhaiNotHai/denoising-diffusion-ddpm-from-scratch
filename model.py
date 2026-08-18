@@ -269,7 +269,7 @@ def ddpm_p_sample(
     params: dict[str, Tensor],
     schedule: dict[str, Tensor | int],
     noise: Tensor | None = None,
-):
+) -> Tensor:
     '''one reverse step x_t -> x_{t-1}'''
 
     if noise is None:
@@ -278,12 +278,17 @@ def ddpm_p_sample(
 
     eps = tiny_unet_forward(x_t, t, params)
     mean, var, _ = ddpm_p_mean_variance(x_t, t, eps, schedule)
-    x_prev = mean + torch.sqrt(var) * noise
+    x_prev: Tensor = mean + torch.sqrt(var) * noise
 
     return x_prev
 
-# Step 18 - ddpm_sample_loop (not yet solved)
-# TODO: implement
+# Step 18 - ddpm_sample_loop
+import torch
+import torch.nn.functional as F
+
+def ddpm_sample_loop(params: dict, schedule: dict, shape: tuple, seed: int = 0):
+    # TODO: ancestral sampling from pure noise to x0
+    pass
 
 # Step 19 - sample_quality_mse (not yet solved)
 # TODO: implement
